@@ -1,0 +1,11 @@
+.idea
+*.iml
+*.json
+*.csv
+
+*.class
+
+.gradletasknamecache
+.gradle
+build/
+out/

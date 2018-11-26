@@ -1,0 +1,4 @@
+rootProject.name = 'mockeyjockey'
+include 'core'
+include 'benchmarks'
+include 'samples'

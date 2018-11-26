@@ -1,0 +1,28 @@
+plugins {
+    id 'application'
+}
+
+ext {
+    ranger_version = "0.0.12"
+    random_beans_version = "3.7.0"
+    mockneat_version = "0.1.7"
+    jmh_version = "1.21"
+}
+
+dependencies {
+    compile project(":core")
+    compile group: "io.smartcat", name: "ranger", version: "${ranger_version}"
+    compile group: "io.github.benas", name: "random-beans", version: "${random_beans_version}"
+    compile group: "net.andreinc.mockneat", name: "mockneat", version: "${mockneat_version}"
+    compile group: "org.openjdk.jmh", name: "jmh-core", version: "${jmh_version}"
+    compile group: "org.openjdk.jmh", name: "jmh-generator-annprocess", version: "${jmh_version}"
+}
+
+jar.enabled = false
+
+shadowJar {
+    baseName = 'mockeyjockey-benchmarks'
+    classifier = null
+}
+
+mainClassName = "org.keremulutas.mockeyjockey.benchmarks.BenchmarkRunner"

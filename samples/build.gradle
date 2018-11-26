@@ -1,0 +1,16 @@
+plugins {
+    id 'application'
+}
+
+dependencies {
+    compile project(":core")
+}
+
+jar.enabled = false
+
+shadowJar {
+    baseName = 'mockeyjockey-samples'
+    classifier = null
+}
+
+mainClassName = "org.keremulutas.mockeyjockey.samples.lottery.SuperLottery"
