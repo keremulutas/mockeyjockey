@@ -13,4 +13,4 @@ shadowJar {
     classifier = null
 }
 
-mainClassName = "org.keremulutas.mockeyjockey.samples.lottery.SuperLottery"
+mainClassName = "org.keremulutas.mockeyjockey.samples.dummy.DummyPackageInformation"

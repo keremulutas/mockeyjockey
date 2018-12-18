@@ -29,7 +29,7 @@ public class SuperLottery {
         // https://stackoverflow.com/questions/309424/read-convert-an-inputstream-to-a-string/35446009#35446009
         String jsonString = CharStreams.toString(
             new InputStreamReader(
-                System.class.getResourceAsStream("/real_lottery_results.json"),
+                System.class.getResourceAsStream("/lottery/real_lottery_results.json"),
                 Charsets.UTF_8
             )
         );
