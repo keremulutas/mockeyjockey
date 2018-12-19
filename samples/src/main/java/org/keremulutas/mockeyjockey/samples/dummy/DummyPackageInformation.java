@@ -56,6 +56,7 @@ public class DummyPackageInformation {
                     if(counter % 10_000 == 0) {
                         val = ipGenerator.getLastGeneratedValue();
                     }
+                    counter++;
                     return val;
                 }
 
