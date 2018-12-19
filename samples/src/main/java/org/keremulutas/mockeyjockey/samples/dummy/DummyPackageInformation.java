@@ -22,13 +22,13 @@ public class DummyPackageInformation {
     private static int count;
 
     public static void main(String[] args) throws IOException {
-        if(args.length != 1) {
+        if (args.length != 1) {
             LOGGER.warn("Usage: .... <lines count: int>");
         }
 
         try {
             count = Integer.parseInt(args[0], 10);
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage());
             System.exit(-1);
         }
@@ -75,15 +75,16 @@ public class DummyPackageInformation {
             ));
         }
 
-        StringBuilder result = new StringBuilder();
         for (int i = 0; i < count; i++) {
-            result.append(linesList.get(i));
-            result.append("\n");
+            for (int j = 0; j < 100_000; j++) {
+                FileOutputStream outputStream = new FileOutputStream("dummy" + count + ".csv");
+                String result = linesList.get(i) + "\n";
+                byte[] strToBytes = result.getBytes();
+                outputStream.write(strToBytes);
+                outputStream.close();
+            }
         }
-        FileOutputStream outputStream = new FileOutputStream("dummy.csv");
-        byte[] strToBytes = result.toString().getBytes();
-        outputStream.write(strToBytes);
-        outputStream.close();
+
     }
 
 }
