@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class DummyPackageInformation {
 
@@ -46,36 +47,43 @@ public class DummyPackageInformation {
             .field("out", mj.longs().min(1000).max(100_000))
             .field("fqdn", mj.formattedString("fqdn.%s").param(mj.randomSelection(String.class).withElements("com", "net", "org", "info", "io", "com.tr", "net.tr", "org.tr")))
             .field("user", mj.strings().length(6))
-            .field("target_ip", ipGenerator)
+            .field("target_ip", mj.custom(String.class, new Supplier<String>() {
+                int counter = 0;
+                String val;
+
+                @Override
+                public String get() {
+                    if(counter % 10_000 == 0) {
+                        val = ipGenerator.getLastGeneratedValue();
+                    }
+                    return val;
+                }
+
+            }))
             .field("target_port", mj.integers().min(1000).max(65535));
 
-        List<String> linesList = new ArrayList<>();
-        String lastIP = null;
         for (int i = 0; i < count; i++) {
-            Map<String, Object> next = mg.get();
-            if (i % 10_000 == 0) {
-                lastIP = next.get("source_ip").toString();
+            List<String> linesList = new ArrayList<>();
+            for (int j = 0; j < 100_000; j++) {
+                Map<String, Object> next = mg.get();
+                linesList.add(String.join(
+                    ";",
+                    next.get("source_ip").toString(),
+                    next.get("source_port").toString(),
+                    next.get("end_ts").toString(),
+                    next.get("start_ts").toString(),
+                    next.get("in").toString(),
+                    next.get("out").toString(),
+                    next.get("fqdn").toString(),
+                    next.get("user").toString(),
+                    next.get("target_ip").toString(),
+                    next.get("target_port").toString(),
+                    "",
+                    "",
+                    "",
+                    "1"
+                ));
             }
-            linesList.add(String.join(
-                ";",
-                lastIP,
-                next.get("source_port").toString(),
-                next.get("end_ts").toString(),
-                next.get("start_ts").toString(),
-                next.get("in").toString(),
-                next.get("out").toString(),
-                next.get("fqdn").toString(),
-                next.get("user").toString(),
-                next.get("target_ip").toString(),
-                next.get("target_port").toString(),
-                "",
-                "",
-                "",
-                "1"
-            ));
-        }
-
-        for (int i = 0; i < count; i++) {
             for (int j = 0; j < 100_000; j++) {
                 FileOutputStream outputStream = new FileOutputStream("dummy" + count + ".csv");
                 String result = linesList.get(i) + "\n";
