@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class DummyPackageInformation {
 
@@ -29,6 +29,7 @@ public class DummyPackageInformation {
 
         try {
             count = Integer.parseInt(args[0], 10);
+            LOGGER.info("count = {}", count);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             System.exit(-1);
@@ -38,8 +39,8 @@ public class DummyPackageInformation {
         NumericSequenceGenerator<Long> timestampGenerator = mj.longSequences().start(currentTimestamp).diff(1L);
 
         IpAddressGenerator ipGenerator = mj.ipAddressesSequential().startFrom("192.168.1.1");
+
         MapGenerator mg = mj.maps()
-            .field("source_ip", ipGenerator)
             .field("source_port", mj.integers().min(1000).max(65535))
             .field("start_ts", timestampGenerator)
             .field("end_ts", timestampGenerator)
@@ -47,24 +48,26 @@ public class DummyPackageInformation {
             .field("out", mj.longs().min(1000).max(100_000))
             .field("fqdn", mj.formattedString("fqdn.%s").param(mj.randomSelection(String.class).withElements("com", "net", "org", "info", "io", "com.tr", "net.tr", "org.tr")))
             .field("user", mj.strings().length(6))
-            .field("target_ip", mj.custom(String.class, new Supplier<String>() {
+            .field("target_ip", ipGenerator)
+            .field("target_port", mj.integers().min(1000).max(65535))
+            .mutate(new Function<Map<String, Object>, Map<String, Object>>() {
                 int counter = 0;
                 String val;
 
                 @Override
-                public String get() {
-                    if(counter % 10_000 == 0) {
+                public Map<String, Object> apply(Map<String, Object> stringObjectMap) {
+                    if (counter % 10_000 == 0) {
                         val = ipGenerator.getLastGeneratedValue();
                     }
                     counter++;
-                    return val;
+                    stringObjectMap.put("source_ip", val);
+                    return stringObjectMap;
                 }
-
-            }))
-            .field("target_port", mj.integers().min(1000).max(65535));
+            });
 
         for (int i = 0; i < count; i++) {
             List<String> linesList = new ArrayList<>();
+
             for (int j = 0; j < 100_000; j++) {
                 Map<String, Object> next = mg.get();
                 linesList.add(String.join(
@@ -85,13 +88,12 @@ public class DummyPackageInformation {
                     "1"
                 ));
             }
-            for (int j = 0; j < 100_000; j++) {
-                FileOutputStream outputStream = new FileOutputStream("dummy" + count + ".csv");
-                String result = linesList.get(i) + "\n";
-                byte[] strToBytes = result.getBytes();
-                outputStream.write(strToBytes);
-                outputStream.close();
-            }
+
+            LOGGER.info("processing file: dummy{}.csv", i);
+            String result = String.join("\n", linesList);
+            FileOutputStream outputStream = new FileOutputStream("./dummy" + i + ".csv");
+            outputStream.write(result.getBytes());
+            outputStream.close();
         }
 
     }
