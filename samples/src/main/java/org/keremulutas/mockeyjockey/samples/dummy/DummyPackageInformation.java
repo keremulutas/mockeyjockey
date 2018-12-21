@@ -21,15 +21,17 @@ public class DummyPackageInformation {
     private static MockeyJockey mj = new MockeyJockey();
 
     private static int count;
+    private static int lines;
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            LOGGER.warn("Usage: .... <lines count: int>");
+        if (args.length != 2) {
+            LOGGER.warn("Usage: .... <file count: int> <line count: int>");
         }
 
         try {
             count = Integer.parseInt(args[0], 10);
-            LOGGER.info("count = {}", count);
+            lines = Integer.parseInt(args[1], 10);
+            LOGGER.info("file count = {}, lines per file = {}", count, lines);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             System.exit(-1);
@@ -46,7 +48,7 @@ public class DummyPackageInformation {
             .field("end_ts", timestampGenerator)
             .field("in", mj.longs().min(1000).max(100_000))
             .field("out", mj.longs().min(1000).max(100_000))
-            .field("fqdn", mj.formattedString("fqdn.%s").param(mj.randomSelection(String.class).withElements("com", "net", "org", "info", "io", "com.tr", "net.tr", "org.tr")))
+            .field("fqdn", mj.formattedString("fqdn.%s").param(mj.randomSelection(String.class).withElements("com", "net", "org", "info", "biz", "com.tr", "net.tr", "org.tr")))
             .field("user", mj.strings().length(6))
             .field("target_ip", ipGenerator)
             .field("target_port", mj.integers().min(1000).max(65535))
@@ -68,7 +70,7 @@ public class DummyPackageInformation {
         for (int i = 0; i < count; i++) {
             List<String> linesList = new ArrayList<>();
 
-            for (int j = 0; j < 100_000; j++) {
+            for (int j = 0; j < lines; j++) {
                 Map<String, Object> next = mg.get();
                 linesList.add(String.join(
                     ";",
