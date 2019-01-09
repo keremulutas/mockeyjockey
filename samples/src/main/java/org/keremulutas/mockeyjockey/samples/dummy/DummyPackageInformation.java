@@ -20,18 +20,27 @@ public class DummyPackageInformation {
 
     private static MockeyJockey mj = new MockeyJockey();
 
-    private static int count;
-    private static int lines;
+    private static int fileCount;
+    private static int fileCountDigits;
+    private static int lineCount;
 
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
-            LOGGER.warn("Usage: .... <file count: int> <line count: int>");
+            LOGGER.info("Usage: .... <file fileCount: int> <line fileCount: int>");
+            System.exit(1);
         }
 
         try {
-            count = Integer.parseInt(args[0], 10);
-            lines = Integer.parseInt(args[1], 10);
-            LOGGER.info("file count = {}, lines per file = {}", count, lines);
+            fileCount = Integer.parseInt(args[0], 10);
+            if(fileCount <= 0) {
+                throw new RuntimeException("File count must be positive, given: " + fileCount);
+            }
+            fileCountDigits = 1 + (int)Math.floor(Math.log10(fileCount));
+            lineCount = Integer.parseInt(args[1], 10);
+            if(lineCount <= 0) {
+                throw new RuntimeException("Line count must be positive, given: " + lineCount);
+            }
+            LOGGER.info("Going to create {} files with {} line(s) each", fileCount, lineCount);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             System.exit(-1);
@@ -67,10 +76,10 @@ public class DummyPackageInformation {
                 }
             });
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 1; i <= fileCount; i++) {
             List<String> linesList = new ArrayList<>();
 
-            for (int j = 0; j < lines; j++) {
+            for (int j = 0; j < lineCount; j++) {
                 Map<String, Object> next = mg.get();
                 linesList.add(String.join(
                     ";",
@@ -91,9 +100,10 @@ public class DummyPackageInformation {
                 ));
             }
 
-            LOGGER.info("processing file: dummy{}.csv", i);
+            String currentFileName = String.format("dummy%0" + fileCountDigits + "d.csv", i);
+            LOGGER.info("processing file: {}", currentFileName);
             String result = String.join("\n", linesList);
-            FileOutputStream outputStream = new FileOutputStream("./dummy" + i + ".csv");
+            FileOutputStream outputStream = new FileOutputStream("./" + currentFileName);
             outputStream.write(result.getBytes());
             outputStream.close();
         }
