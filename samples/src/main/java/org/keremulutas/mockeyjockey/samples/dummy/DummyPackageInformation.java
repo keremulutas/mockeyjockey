@@ -91,11 +91,13 @@ public class DummyPackageInformation {
             .field("device_ip", mj.randomSelection(String.class).withElements("dev1", "dev2", "dev3", "dev4"));
 
         for (int i = 1; i <= fileCount; i++) {
-            List<String> linesList = new ArrayList<>();
+            String currentFileName = String.format("dummy%0" + fileCountDigits + "d.csv", i);
+            LOGGER.info("processing file: {}", currentFileName);
+            FileOutputStream outputStream = new FileOutputStream("./" + currentFileName);
 
             for (int j = 0; j < lineCount; j++) {
                 Map<String, Object> next = mg.get();
-                linesList.add(String.join(
+                String line = String.join(
                     fieldSeparator,
                     next.get("user").toString() + "@ttnet",
                     next.get("source_ip").toString(),
@@ -109,15 +111,12 @@ public class DummyPackageInformation {
                     next.get("fqdn").toString(),
                     next.get("in").toString(),
                     next.get("out").toString(),
-                    next.get("device_ip").toString()
-                ));
+                    next.get("device_ip").toString(),
+                    "\n"
+                );
+                outputStream.write(line.getBytes());
             }
 
-            String currentFileName = String.format("dummy%0" + fileCountDigits + "d.csv", i);
-            LOGGER.info("processing file: {}", currentFileName);
-            String result = String.join("\n", linesList);
-            FileOutputStream outputStream = new FileOutputStream("./" + currentFileName);
-            outputStream.write(result.getBytes());
             outputStream.close();
         }
 
