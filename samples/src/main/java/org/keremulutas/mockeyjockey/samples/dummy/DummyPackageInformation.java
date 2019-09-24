@@ -53,14 +53,14 @@ public class DummyPackageInformation {
 
         ZonedDateTimeGenerator.WithFrequency dateTimeGenerator = mj.zonedDateTimesWithFrequency()
             .start(ZonedDateTime.now())
-            .frequency(1L, ChronoUnit.SECONDS);
+            .frequency(10L, ChronoUnit.SECONDS);
 
         IpAddressGenerator ipGenerator = mj.ipAddressesSequential().startFrom("192.168.1.1");
 
         MapGenerator mg = mj.maps()
             .field("user", mj.strings().length(6))
             .field("start_ts", mj.custom(String.class, new Supplier<String>() {
-                private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddhhmmss");
+                private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
                 @Override
                 public String get() {
