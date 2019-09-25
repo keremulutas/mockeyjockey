@@ -28,6 +28,7 @@ public class DummyPackageInformation {
     private static int fileCountDigits;
     private static int lineCount;
     private static String fieldSeparator = "|";
+    private static String lineSeparator = "\n";
 
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
@@ -111,10 +112,10 @@ public class DummyPackageInformation {
                     next.get("fqdn").toString(),
                     next.get("in").toString(),
                     next.get("out").toString(),
-                    next.get("device_ip").toString(),
-                    "\n"
+                    next.get("device_ip").toString()
                 );
                 outputStream.write(line.getBytes());
+                outputStream.write(lineSeparator.getBytes());
             }
 
             outputStream.close();
