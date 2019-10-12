@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -54,7 +55,7 @@ public class DummyPackageInformation {
 
         ZonedDateTimeGenerator.WithFrequency dateTimeGenerator = mj.zonedDateTimesWithFrequency()
             .start(ZonedDateTime.now())
-            .frequency(10L, ChronoUnit.SECONDS);
+            .frequency(1000L, ChronoUnit.SECONDS);
 
         IpAddressGenerator ipGenerator = mj.ipAddressesSequential().startFrom("192.168.1.1");
 
@@ -72,8 +73,6 @@ public class DummyPackageInformation {
             .field("in", mj.longs().min(1000).max(100_000))
             .field("out", mj.longs().min(1000).max(100_000))
             .field("fqdn", mj.formattedString("fqdn.%s").param(mj.randomSelection(String.class).withElements("com", "net", "org", "info", "biz", "com.tr", "net.tr", "org.tr")))
-            .field("target_ip", ipGenerator)
-            .field("target_port", mj.integers().min(1000).max(65535))
             .mutate(new Function<Map<String, Object>, Map<String, Object>>() {
                 int counter = 0;
                 String val;
@@ -81,18 +80,21 @@ public class DummyPackageInformation {
                 @Override
                 public Map<String, Object> apply(Map<String, Object> stringObjectMap) {
                     if (counter % 10_000 == 0) {
-                        val = ipGenerator.getLastGeneratedValue();
+                        val = ipGenerator.get();
                     }
                     counter++;
-                    stringObjectMap.put("source_ip", val);
+                    stringObjectMap.put("target_ip", val);
                     return stringObjectMap;
                 }
             })
+            .field("target_port", mj.integers().min(1000).max(65535))
+            .field("source_ip", ipGenerator)
             .field("source_port", mj.integers().min(1000).max(65535))
             .field("device_ip", mj.randomSelection(String.class).withElements("dev1", "dev2", "dev3", "dev4"));
 
+        long ts = Instant.now().toEpochMilli();
         for (int i = 1; i <= fileCount; i++) {
-            String currentFileName = String.format("dummy%0" + fileCountDigits + "d.csv", i);
+            String currentFileName = String.format(ts + "_dummy%0" + fileCountDigits + "d.csv", i);
             LOGGER.info("processing file: {}", currentFileName);
             FileOutputStream outputStream = new FileOutputStream("./" + currentFileName);
 
