@@ -1,7 +1,7 @@
 package org.keremulutas.mockeyjockey.utils;
 
-import sun.misc.DoubleConsts;
-import sun.misc.FormattedFloatingDecimal;
+import org.keremulutas.mockeyjockey.utils.printf.DoubleConsts;
+import org.keremulutas.mockeyjockey.utils.printf.FormattedFloatingDecimal;
 
 import java.io.IOException;
 import java.math.BigDecimal;
