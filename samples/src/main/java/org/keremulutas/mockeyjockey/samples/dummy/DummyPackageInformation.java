@@ -2,8 +2,9 @@ package org.keremulutas.mockeyjockey.samples.dummy;
 
 import org.keremulutas.mockeyjockey.MockeyJockey;
 import org.keremulutas.mockeyjockey.core.generator.IpAddressGenerator;
-import org.keremulutas.mockeyjockey.core.generator.MapGenerator;
+import org.keremulutas.mockeyjockey.core.generator.GenericObjectGenerator;
 import org.keremulutas.mockeyjockey.core.generator.ZonedDateTimeGenerator;
+import org.keremulutas.mockeyjockey.core.type.GenericObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,8 +14,6 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -59,7 +58,7 @@ public class DummyPackageInformation {
 
         IpAddressGenerator ipGenerator = mj.ipAddressesSequential().startFrom("192.168.1.1");
 
-        MapGenerator mg = mj.maps()
+        GenericObjectGenerator mg = mj.genericObjects()
             .field("user", mj.strings().length(6))
             .field("start_ts", mj.custom(String.class, new Supplier<String>() {
                 private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -73,12 +72,12 @@ public class DummyPackageInformation {
             .field("in", mj.longs().min(1000).max(100_000))
             .field("out", mj.longs().min(1000).max(100_000))
             .field("fqdn", mj.formattedString("fqdn.%s").param(mj.randomSelection(String.class).withElements("com", "net", "org", "info", "biz", "com.tr", "net.tr", "org.tr")))
-            .mutate(new Function<Map<String, Object>, Map<String, Object>>() {
+            .mutate(new Function<GenericObject, GenericObject>() {
                 int counter = 0;
                 String val;
 
                 @Override
-                public Map<String, Object> apply(Map<String, Object> stringObjectMap) {
+                public GenericObject apply(GenericObject stringObjectMap) {
                     if (counter % 10_000 == 0) {
                         val = ipGenerator.get();
                     }

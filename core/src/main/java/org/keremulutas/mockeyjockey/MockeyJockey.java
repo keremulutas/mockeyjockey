@@ -103,8 +103,8 @@ public class MockeyJockey {
         return new ListGenerator<>(_randomizer);
     }
 
-    public MapGenerator maps() {
-        return new MapGenerator(_randomizer);
+    public GenericObjectGenerator genericObjects() {
+        return new GenericObjectGenerator(_randomizer);
     }
 
     public ZonedDateTimeGenerator.WithFrequency zonedDateTimesWithFrequency() {

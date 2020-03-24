@@ -49,7 +49,7 @@ public class Gamer {
         //     "Status": "Fail",
         //     "timeStamp": "1580280778"
         // }
-        MapGenerator marketGenerator = mj.maps()
+        GenericObjectGenerator marketGenerator = mj.genericObjects()
             .field("token", tokenGenerator)
             .field("category", mj.constant("Shop"))
             .field("subCategory", mj.constant("Weapon"))
@@ -85,7 +85,7 @@ public class Gamer {
         //     "RSType":0,
         //     "PSType":0
         // }
-        MapGenerator loginGenerator = mj.maps()
+        GenericObjectGenerator loginGenerator = mj.genericObjects()
             .field("MemberId", idGenerator)
             .field("Token", tokenGenerator)
             .field("LastLevel", mj.constant(4))

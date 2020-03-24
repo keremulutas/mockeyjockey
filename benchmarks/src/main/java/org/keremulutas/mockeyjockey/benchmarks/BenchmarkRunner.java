@@ -6,6 +6,7 @@ import org.keremulutas.mockeyjockey.MockeyJockey;
 import org.keremulutas.mockeyjockey.benchmarks.beans.Platform;
 import org.keremulutas.mockeyjockey.benchmarks.beans.User;
 import org.keremulutas.mockeyjockey.core.generator.*;
+import org.keremulutas.mockeyjockey.core.type.GenericObject;
 import org.keremulutas.mockeyjockey.utils.Constants;
 import org.openjdk.jmh.annotations.*;
 import org.slf4j.Logger;
@@ -143,7 +144,7 @@ public class BenchmarkRunner {
             .field("platform", randomPlatformGenerator)
             .field("creditCard", uniqueCreditCardGenerator);
 
-        Generator<Void, Map<String, Object>> userMapGenerator = mj.maps()
+        Generator<Void, GenericObject> userMapGenerator = mj.genericObjects()
             .field("userId", userIdGenerator)
             .field("email", emailGenerator)
             .field("mobileNumber", mobileNumberGenerator)
