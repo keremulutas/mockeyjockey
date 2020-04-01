@@ -33,11 +33,13 @@ public abstract class ZonedDateTimeGenerator extends Generator<Void, ZonedDateTi
         private long _period;
         private int _counter = 0;
         private Instant _nextResult;
+        private Instant _lastPeriod;
         private long _offset;
 
         public WithFrequency(Random randomizer) {
             super(randomizer);
             this._start = ZonedDateTime.now().toInstant();
+            this._lastPeriod = this._start;
             this._nextResult = this._start;
             this._countGenerator = new ConstantGenerator<>(1L, randomizer);
             this._currentCount = this._countGenerator.get();
@@ -53,6 +55,7 @@ public abstract class ZonedDateTimeGenerator extends Generator<Void, ZonedDateTi
         public WithFrequency start(Instant instant) {
             this._start = instant;
             this._nextResult = this._start;
+            this._lastPeriod = this._start;
             return this;
         }
 
@@ -80,9 +83,8 @@ public abstract class ZonedDateTimeGenerator extends Generator<Void, ZonedDateTi
                 this._counter = 0;
                 this._currentCount = this._countGenerator.get();
                 this._offset = Math.floorDiv(this._period, this._currentCount);
-                this._nextResult = this._nextResult
-                    .truncatedTo(this._chronoUnit)
-                    .plus(1, this._chronoUnit);
+                this._lastPeriod = this._lastPeriod.plus(1, this._chronoUnit);
+                this._nextResult = this._lastPeriod;
             } else {
                 this._nextResult = this._nextResult.plusNanos(this._offset);
             }
