@@ -1,5 +1,6 @@
 package org.keremulutas.mockeyjockey.core.generator;
 
+import com.google.common.collect.HashBiMap;
 import org.keremulutas.mockeyjockey.core.exception.MockeyJockeyException;
 
 import java.lang.invoke.MethodHandle;
@@ -21,7 +22,7 @@ public abstract class ObjectGenerator<T> extends Generator<Void, T> {
 
     public static class Reflection<T> extends ObjectGenerator<T> {
 
-        private static final Map<Class<?>, Class<?>> primitiveTypesMap = new HashMap<>();
+        private static final HashBiMap<Class<?>, Class<?>> primitiveTypesMap = HashBiMap.create();
 
         static {
             primitiveTypesMap.put(Boolean.class, boolean.class);
@@ -49,18 +50,43 @@ public abstract class ObjectGenerator<T> extends Generator<Void, T> {
 
         private MethodHandle findSetter(String fieldName, Class<?> clz) {
             MethodHandle result = null;
+            Class<?> primitiveClass = null;
+            if(primitiveTypesMap.containsKey(clz) || primitiveTypesMap.containsValue(clz)) {
+                primitiveClass = (primitiveTypesMap.containsKey(clz)) ? primitiveTypesMap.get(clz) : primitiveTypesMap.inverse().get(clz);
+            }
+
             try {
                 result = lookup.findSetter(this._objectClass, fieldName, clz);
             } catch (IllegalAccessException | NoSuchFieldException ignored) {
 
             }
-            if (result == null && primitiveTypesMap.containsKey(clz)) {
+
+            if (result == null && primitiveClass != null) {
                 try {
-                    result = lookup.findSetter(this._objectClass, fieldName, primitiveTypesMap.get(clz));
+                    result = lookup.findSetter(this._objectClass, fieldName, primitiveClass);
                 } catch (IllegalAccessException | NoSuchFieldException ignored) {
 
                 }
             }
+
+            if(result == null) {
+                String setterName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+
+                try {
+                    result = lookup.findVirtual(this._objectClass, setterName, MethodType.methodType(void.class, clz));
+                } catch (IllegalAccessException | NoSuchMethodException ignored) {
+
+                }
+
+                if (result == null && primitiveClass != null) {
+                    try {
+                        result = lookup.findVirtual(this._objectClass, setterName, MethodType.methodType(void.class, primitiveClass));
+                    } catch (IllegalAccessException | NoSuchMethodException ignored) {
+
+                    }
+                }
+            }
+
             return result;
         }
 
