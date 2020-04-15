@@ -147,7 +147,7 @@ public class MockeyJockey {
         return new ConcurrentSelectionGenerator.RandomizedFromMap<>(clz, keyClz, _randomizer);
     }
 
-    public <IT, OT> Generator<IT, OT> transform(Class<OT> clz, Generator<?, IT> sourceGenerator, Function<IT, OT> input) {
+    public <OIT, IIT, OT> Generator<OIT, OT> transform(Class<OT> clz, Generator<OIT, IIT> sourceGenerator, Function<IIT, OT> input) {
         return new TransformerGenerator<>(clz, sourceGenerator, input);
     }
 

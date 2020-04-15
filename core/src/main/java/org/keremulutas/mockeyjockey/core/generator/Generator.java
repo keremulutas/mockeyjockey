@@ -12,7 +12,6 @@ public abstract class Generator<IT, OT> implements Consumer<IT>, Supplier<OT> {
     protected TypeToken<OT> _type = new TypeToken<OT>(getClass()) { static final long serialVersionUID = 1L; };
 
     protected Random _randomizer;
-    protected IT _input;
     protected OT _output;
     protected boolean _explicitReset = false;
 
@@ -20,11 +19,6 @@ public abstract class Generator<IT, OT> implements Consumer<IT>, Supplier<OT> {
 
     public Generator(Random randomizer) {
         this._randomizer = randomizer;
-    }
-
-    public Generator(IT value, Random randomizer) {
-        this._randomizer = randomizer;
-        this._input = value;
     }
 
     public void reset() {
@@ -42,7 +36,7 @@ public abstract class Generator<IT, OT> implements Consumer<IT>, Supplier<OT> {
     }
 
     public void accept(IT t) {
-        this._input = t;
+
     }
 
     protected abstract OT generate();
@@ -76,7 +70,7 @@ public abstract class Generator<IT, OT> implements Consumer<IT>, Supplier<OT> {
             .source(this);
     }
 
-    public <T> Generator<OT, T> transform(Class<T> clz, Function<OT, T> fn) {
+    public <T> Generator<IT, T> transform(Class<T> clz, Function<OT, T> fn) {
         return new TransformerGenerator<>(clz, this, fn);
     }
 

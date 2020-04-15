@@ -22,7 +22,7 @@ public class Gamer {
         Generator<Void, Integer> idGenerator = mj.integers().min(1).withExplicitReset(true);
         Generator<Void, String> tokenGenerator = mj.formattedString("token-%d").param(idGenerator).withExplicitReset(true);
 
-        Generator<ZonedDateTime, String> loginDateTimeGenerator = mj.zonedDateTimesWithFrequency()
+        Generator<Void, String> loginDateTimeGenerator = mj.zonedDateTimesWithFrequency()
             .start(ZonedDateTime.now())
             .frequency(10L, ChronoUnit.MINUTES)
             .transform(String.class, zonedDateTime -> String.valueOf(zonedDateTime.toInstant().getEpochSecond()));

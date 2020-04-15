@@ -2,13 +2,13 @@ package org.keremulutas.mockeyjockey.core.generator;
 
 import java.util.function.Function;
 
-public class TransformerGenerator<IT, OT> extends Generator<IT, OT> {
+public class TransformerGenerator<OIT, IIT, OT> extends Generator<OIT, OT> {
 
     private Class<OT> _objectClass;
-    private Generator<?, IT> _sourceGenerator;
-    private Function<IT, OT> _fn;
+    private Generator<OIT, IIT> _sourceGenerator;
+    private Function<IIT, OT> _fn;
 
-    public TransformerGenerator(Class<OT> clz, Generator<?, IT> sourceGenerator, Function<IT, OT> fn) {
+    public TransformerGenerator(Class<OT> clz, Generator<OIT, IIT> sourceGenerator, Function<IIT, OT> fn) {
         super(sourceGenerator._randomizer);
         this._objectClass = clz;
         this._sourceGenerator = sourceGenerator;
@@ -17,8 +17,8 @@ public class TransformerGenerator<IT, OT> extends Generator<IT, OT> {
 
     @Override
     protected OT generate() {
-        this._input = this._sourceGenerator.get();
-        return this._fn.apply(this._input);
+        IIT value = this._sourceGenerator.get();
+        return this._fn.apply(value);
     }
 
     @SuppressWarnings("unchecked")
