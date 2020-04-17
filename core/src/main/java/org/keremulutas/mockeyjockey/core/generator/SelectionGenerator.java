@@ -32,6 +32,9 @@ public abstract class SelectionGenerator<T> extends Generator<Void, T> {
     }
 
     public SelectionGenerator<T> withElements(List<T> elements) {
+        if(elements.isEmpty()) {
+            throw new MockeyJockeyException(".withElements called with empty list", this.getClass().getName(), this._tag);
+        }
         ArrayList<T> list = new ArrayList<>(elements);
         this._sourceGenerator = new ConstantGenerator<>(list, this._randomizer);
         this._isCircular = true;
@@ -39,6 +42,9 @@ public abstract class SelectionGenerator<T> extends Generator<Void, T> {
     }
 
     public SelectionGenerator<T> withElements(Set<T> elements) {
+        if(elements.isEmpty()) {
+            throw new MockeyJockeyException(".withElements called with empty set", this.getClass().getName(), this._tag);
+        }
         ArrayList<T> list = new ArrayList<>(elements);
         this._sourceGenerator = new ConstantGenerator<>(list, this._randomizer);
         this._isCircular = true;
@@ -74,7 +80,7 @@ public abstract class SelectionGenerator<T> extends Generator<Void, T> {
         @Override
         protected T generate() {
             if (this._sourceGenerator == null) {
-                throw new MockeyJockeyException("Source generator must be supplied", this);
+                throw new MockeyJockeyException("Source generator must be supplied", this.getClass().getName(), this._tag);
             }
 
             if (this._currentList == null || this._currentList.size() == 0) {
@@ -126,13 +132,13 @@ public abstract class SelectionGenerator<T> extends Generator<Void, T> {
         @Override
         protected T generate() {
             if (this._sourceGenerator == null) {
-                throw new MockeyJockeyException("Source generator or elements must be supplied", this);
+                throw new MockeyJockeyException("Source generator or elements must be supplied", this.getClass().getName(), this._tag);
             }
 
             if (this._currentList == null || this._currentList.size() == 0 || ( !this._isCircular && this._currentIndex % this._currentList.size() == 0 )) {
                 this._currentList = this._sourceGenerator.get();
                 if (this._currentList.size() == 0) {
-                    throw new MockeyJockeyException("Source generator generated a list with 0 elements", this);
+                    throw new MockeyJockeyException("Source generator generated a list with 0 elements", this.getClass().getName(), this._tag);
                 }
             }
 

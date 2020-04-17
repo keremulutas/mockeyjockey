@@ -35,7 +35,7 @@ public class StringGenerator extends Generator<Void, String> {
     @Override
     protected String generate() {
         if (this._lengthGenerator == null) {
-            throw new MockeyJockeyException("Length must be supplied", this);
+            throw new MockeyJockeyException("Length must be supplied", this.getClass().getName(), this._tag);
         }
         int length = this._lengthGenerator.get();
 

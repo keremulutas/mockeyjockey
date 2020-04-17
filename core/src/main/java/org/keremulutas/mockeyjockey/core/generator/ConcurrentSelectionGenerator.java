@@ -36,11 +36,11 @@ public abstract class ConcurrentSelectionGenerator<T> extends Generator<Void, T>
         @Override
         protected T generate() {
             if (this._source == null) {
-                throw new MockeyJockeyException("Source must be supplied", this);
+                throw new MockeyJockeyException("Source must be supplied", this.getClass().getName(), this._tag);
             }
 
             if (this._source.size() == 0) {
-                throw new MockeyJockeyException("Source generator supplied zero length list", this);
+                throw new MockeyJockeyException("Source generator supplied zero length list", this.getClass().getName(), this._tag);
             }
 
             int index = this._randomizer.nextInt(this._source.size());
@@ -73,11 +73,11 @@ public abstract class ConcurrentSelectionGenerator<T> extends Generator<Void, T>
         @Override
         protected T generate() {
             if (this._source == null) {
-                throw new MockeyJockeyException("Source must be supplied", this);
+                throw new MockeyJockeyException("Source must be supplied", this.getClass().getName(), this._tag);
             }
 
             if (this._source.size() == 0) {
-                throw new MockeyJockeyException("Source is empty", this);
+                throw new MockeyJockeyException("Source is empty", this.getClass().getName(), this._tag);
             }
 
             int index = this._randomizer.nextInt(this._source.size());
@@ -113,11 +113,11 @@ public abstract class ConcurrentSelectionGenerator<T> extends Generator<Void, T>
         @Override
         protected T generate() {
             if (this._source == null) {
-                throw new MockeyJockeyException("Source must be supplied", this);
+                throw new MockeyJockeyException("Source must be supplied", this.getClass().getName(), this._tag);
             }
 
             if (this._source.size() == 0) {
-                throw new MockeyJockeyException("Source generator supplied zero length list", this);
+                throw new MockeyJockeyException("Source generator supplied zero length list", this.getClass().getName(), this._tag);
             }
 
             T value;

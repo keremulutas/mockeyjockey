@@ -38,7 +38,7 @@ public class GenericObjectGenerator extends Generator<Void, GenericObject> {
         } catch (MockeyJockeyException e) {
             throw e;
         } catch (Throwable throwable) {
-            throw new MockeyJockeyException(throwable, this);
+            throw new MockeyJockeyException(throwable, this.getClass().getName(), this._tag);
         }
         return result;
     }

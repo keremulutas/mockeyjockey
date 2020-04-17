@@ -30,7 +30,7 @@ public class FormattedStringGenerator extends Generator<Void, String> {
     @Override
     protected String generate() {
         if (this._generators.size() == 0) {
-            throw new MockeyJockeyException("Partial string generators must be supplied", this);
+            throw new MockeyJockeyException("Partial string generators must be supplied", this.getClass().getName(), this._tag);
         }
         int argCount = this._generators.size();
         Object[] args = new Object[argCount];

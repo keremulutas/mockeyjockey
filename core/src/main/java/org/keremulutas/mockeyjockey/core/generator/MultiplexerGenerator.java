@@ -92,14 +92,14 @@ public abstract class MultiplexerGenerator<T> extends Generator<Void, T> {
         @Override
         protected Integer generate() {
             if (super._sourceGenerators.size() == 0) {
-                throw new MockeyJockeyException("Source generator or elements must be supplied", this);
+                throw new MockeyJockeyException("Source generator or elements must be supplied", this.getClass().getName(), this._tag);
             }
 
             if (super._buffer == null || super._buffer.size() == 0 || (!super._isCircular && super._currentIndex % super._buffer.size() == 0)) {
                 this.calcBuffer();
 
                 if(super._buffer.size() == 0) {
-                    throw new MockeyJockeyException("Operation generated a list with 0 elements", this);
+                    throw new MockeyJockeyException("Operation generated a list with 0 elements", this.getClass().getName(), this._tag);
                 }
             }
 
@@ -146,14 +146,14 @@ public abstract class MultiplexerGenerator<T> extends Generator<Void, T> {
         @Override
         protected Long generate() {
             if (super._sourceGenerators.size() == 0) {
-                throw new MockeyJockeyException("Source generator or elements must be supplied", this);
+                throw new MockeyJockeyException("Source generator or elements must be supplied", this.getClass().getName(), this._tag);
             }
 
             if (super._buffer == null || super._buffer.size() == 0 || (!super._isCircular && super._currentIndex % super._buffer.size() == 0)) {
                 this.calcBuffer();
 
                 if(super._buffer.size() == 0) {
-                    throw new MockeyJockeyException("Operation generated a list with 0 elements", this);
+                    throw new MockeyJockeyException("Operation generated a list with 0 elements", this.getClass().getName(), this._tag);
                 }
             }
 
@@ -200,14 +200,14 @@ public abstract class MultiplexerGenerator<T> extends Generator<Void, T> {
         @Override
         protected Double generate() {
             if (super._sourceGenerators.size() == 0) {
-                throw new MockeyJockeyException("Source generator or elements must be supplied", this);
+                throw new MockeyJockeyException("Source generator or elements must be supplied", this.getClass().getName(), this._tag);
             }
 
             if (super._buffer == null || super._buffer.size() == 0 || (!super._isCircular && super._currentIndex % super._buffer.size() == 0)) {
                 this.calcBuffer();
 
                 if(super._buffer.size() == 0) {
-                    throw new MockeyJockeyException("Operation generated a list with 0 elements", this);
+                    throw new MockeyJockeyException("Operation generated a list with 0 elements", this.getClass().getName(), this._tag);
                 }
             }
 

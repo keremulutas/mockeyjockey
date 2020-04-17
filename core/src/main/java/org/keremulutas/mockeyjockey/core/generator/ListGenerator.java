@@ -34,7 +34,7 @@ public class ListGenerator<T> extends Generator<Void, List<T>> {
     @Override
     protected List<T> generate() {
         if (this._lengthGenerator == null || this._sourceGenerator == null) {
-            throw new MockeyJockeyException("Source and length generators must be supplied", this);
+            throw new MockeyJockeyException("Source and length generators must be supplied", this.getClass().getName(), this._tag);
         }
         int length = this._lengthGenerator.get();
 

@@ -53,7 +53,7 @@ public class ParameterizedStringGenerator extends Generator<Void, String> {
     @Override
     protected String generate() {
         if (this._generators.size() == 0) {
-            throw new MockeyJockeyException("Partial string generators must be supplied", this);
+            throw new MockeyJockeyException("Partial string generators must be supplied", this.getClass().getName(), this._tag);
         }
 
         String result = this._format;

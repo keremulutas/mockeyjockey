@@ -2,6 +2,7 @@ package org.keremulutas.mockeyjockey.core.generator;
 
 import java.util.function.Function;
 
+// OIT: original input type, IIT: intermediate input type
 public class TransformerGenerator<OIT, IIT, OT> extends Generator<OIT, OT> {
 
     private Class<OT> _objectClass;

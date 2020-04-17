@@ -127,7 +127,7 @@ public abstract class ObjectGenerator<T> extends Generator<Void, T> {
             } catch (MockeyJockeyException e) {
                 throw e;
             } catch (Throwable throwable) {
-                throw new MockeyJockeyException(throwable, this);
+                throw new MockeyJockeyException(throwable, this.getClass().getName(), this._tag);
             }
             return objInstance;
         }
