@@ -31,19 +31,9 @@ public abstract class SelectionGenerator<T> extends Generator<Void, T> {
         return this.withElements(Arrays.asList(elements));
     }
 
-    public SelectionGenerator<T> withElements(List<T> elements) {
+    public SelectionGenerator<T> withElements(Collection<T> elements) {
         if(elements.isEmpty()) {
-            throw new MockeyJockeyException(".withElements called with empty list", this.getClass().getName(), this._tag);
-        }
-        ArrayList<T> list = new ArrayList<>(elements);
-        this._sourceGenerator = new ConstantGenerator<>(list, this._randomizer);
-        this._isCircular = true;
-        return this;
-    }
-
-    public SelectionGenerator<T> withElements(Set<T> elements) {
-        if(elements.isEmpty()) {
-            throw new MockeyJockeyException(".withElements called with empty set", this.getClass().getName(), this._tag);
+            throw new MockeyJockeyException(".withElements called with empty collection", this.getClass().getName(), this._tag);
         }
         ArrayList<T> list = new ArrayList<>(elements);
         this._sourceGenerator = new ConstantGenerator<>(list, this._randomizer);
@@ -73,7 +63,7 @@ public abstract class SelectionGenerator<T> extends Generator<Void, T> {
         }
 
         @Override
-        public SelectionGenerator.Randomized<T> withElements(List<T> elements) {
+        public SelectionGenerator.Randomized<T> withElements(Collection<T> elements) {
             return (SelectionGenerator.Randomized<T>) super.withElements(elements);
         }
 
@@ -125,7 +115,7 @@ public abstract class SelectionGenerator<T> extends Generator<Void, T> {
         }
 
         @Override
-        public SelectionGenerator.Sequential<T> withElements(List<T> elements) {
+        public SelectionGenerator.Sequential<T> withElements(Collection<T> elements) {
             return (SelectionGenerator.Sequential<T>) super.withElements(elements);
         }
 

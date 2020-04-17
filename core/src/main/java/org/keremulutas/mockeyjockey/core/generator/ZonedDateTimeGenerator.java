@@ -6,6 +6,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
@@ -145,7 +146,7 @@ public abstract class ZonedDateTimeGenerator extends Generator<Void, ZonedDateTi
             return this;
         }
 
-        public WithRatio counts(List<Long> counts) {
+        public WithRatio counts(Collection<Long> counts) {
             return this.counts(
                 new SelectionGenerator.Sequential<>(Long.class, this._randomizer).withElements(counts)
             );
