@@ -54,7 +54,7 @@ public class DummyPackageInformation {
 
         ZonedDateTimeGenerator.WithFrequency dateTimeGenerator = mj.zonedDateTimesWithFrequency()
             .start(ZonedDateTime.now())
-            .frequency(10L, ChronoUnit.SECONDS);
+            .frequency(10L, 1, ChronoUnit.SECONDS);
 
         IpAddressGenerator ipGenerator = mj.ipAddressesSequential().startFrom("192.168.1.1");
 

@@ -24,7 +24,7 @@ public class Gamer {
 
         Generator<Void, String> loginDateTimeGenerator = mj.zonedDateTimesWithFrequency()
             .start(ZonedDateTime.now())
-            .frequency(10L, ChronoUnit.MINUTES)
+            .frequency(10L, 1, ChronoUnit.MINUTES)
             .transform(String.class, zonedDateTime -> String.valueOf(zonedDateTime.toInstant().getEpochSecond()));
 
         // {
