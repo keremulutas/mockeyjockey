@@ -2,6 +2,7 @@ package org.keremulutas.mockeyjockey.core.generator;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class WeightedGenerator<T> extends Generator<Void, T> {
 
@@ -72,24 +73,35 @@ public class WeightedGenerator<T> extends Generator<Void, T> {
         this._availableSuppliers.put(supplier, x);
     }
 
+    private int remainingCount() {
+        return this._availableSuppliers.values().stream().mapToInt(Integer::intValue).sum();
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     protected T generate() {
         if (this._availableSuppliers.size() == 0) {
             this.fillList();
         }
-        int x = (this._sequential) ? 0 : this._randomizer.nextInt(this._availableSuppliers.keySet().size());
-        Iterator<Supplier<T>> it = this._availableSuppliers.keySet().iterator();
         Supplier<T> supplier = null;
-        for(int i = 0; i <= x && it.hasNext(); i++) {
+        Iterator<Supplier<T>> it = this._availableSuppliers.keySet().iterator();
+        if(this._sequential) {
             supplier = it.next();
+        } else {
+            int x = this._randomizer.nextInt(this.remainingCount());
+            do {
+                supplier = it.next();
+                x -= this._availableSuppliers.get(supplier);
+            } while(x > 0);
         }
+
         Integer count = this._availableSuppliers.get(supplier);
         if(count == 1) {
             it.remove();
         } else {
             this._availableSuppliers.replace(supplier, count - 1);
         }
+
         return supplier.get();
     }
 
