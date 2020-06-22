@@ -27,13 +27,13 @@ public abstract class ZonedDateTimeGenerator extends Generator<Void, ZonedDateTi
         private long _period;
         private int _counter = 0;
         private ZonedDateTime _nextResult;
-        private ZonedDateTime _lastPeriod;
+        private ZonedDateTime _lastPeriodStart;
         private long _offset;
 
         public WithFrequency(Random randomizer) {
             super(randomizer);
             this._start = ZonedDateTime.now();
-            this._lastPeriod = this._start;
+            this._lastPeriodStart = this._start;
             this._nextResult = this._start;
             this._countGenerator = new ConstantGenerator<>(1L, randomizer);
             this._currentCount = this._countGenerator.get();
@@ -51,7 +51,7 @@ public abstract class ZonedDateTimeGenerator extends Generator<Void, ZonedDateTi
         public WithFrequency start(ZonedDateTime zonedDateTime) {
             this._start = zonedDateTime;
             this._nextResult = this._start;
-            this._lastPeriod = this._start;
+            this._lastPeriodStart = this._start;
             return this;
         }
 
@@ -64,7 +64,7 @@ public abstract class ZonedDateTimeGenerator extends Generator<Void, ZonedDateTi
             this._currentCount = this._countGenerator.get();
             this._timeAmount = timeAmount;
             this._timeUnit = chronoUnit;
-            this._period = this._timeAmount * this._timeUnit.getDuration().toNanos();
+            this._period = ChronoUnit.NANOS.between(this._nextResult, this._nextResult.plus(this._timeAmount, this._timeUnit));
             this._offset = Math.floorDiv(this._period, this._currentCount);
             return this;
         }
@@ -76,9 +76,10 @@ public abstract class ZonedDateTimeGenerator extends Generator<Void, ZonedDateTi
             if (this._counter == this._currentCount) {
                 this._counter = 0;
                 this._currentCount = this._countGenerator.get();
+                this._lastPeriodStart = this._lastPeriodStart.plus(this._timeAmount, this._timeUnit);
+                this._nextResult = this._lastPeriodStart;
+                this._period = ChronoUnit.NANOS.between(this._nextResult, this._nextResult.plus(this._timeAmount, this._timeUnit));
                 this._offset = Math.floorDiv(this._period, this._currentCount);
-                this._lastPeriod = this._lastPeriod.plus(this._timeAmount, this._timeUnit);
-                this._nextResult = this._lastPeriod;
             } else {
                 this._nextResult = this._nextResult.plusNanos(this._offset);
             }
